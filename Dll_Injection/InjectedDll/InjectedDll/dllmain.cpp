@@ -10,7 +10,7 @@ extern "C"
 
     int hook(PCSTR funcToHook, PCSTR dllToHook, DWORD_PTR newFuncAddr)
     {
-        PIMAGE_DOS_HEADER dosHeader;
+	    PIMAGE_DOS_HEADER dosHeader;
 	    PIMAGE_NT_HEADERS NTHeader;
 	    PIMAGE_OPTIONAL_HEADER optionalHeader;
 	    IMAGE_DATA_DIRECTORY importDirectory;
@@ -65,7 +65,7 @@ extern "C"
 
 	    // Hook IAT: Write over function pointer
 	    DWORD dwOld = NULL;
-        g_originalFuncAddr = thunkIAT->u1.Function;
+	    g_originalFuncAddr = thunkIAT->u1.Function;
 	    VirtualProtect((LPVOID)&(thunkIAT->u1.Function), sizeof(DWORD_PTR), PAGE_READWRITE, &dwOld);
 	    thunkIAT->u1.Function = newFuncAddr;
 	    VirtualProtect((LPVOID)&(thunkIAT->u1.Function), sizeof(DWORD_PTR), dwOld, NULL);
