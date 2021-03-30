@@ -81,7 +81,7 @@ extern "C"
         PULONG                   ReturnLength
     )
     {
-        NTSTATUS status = ((_NtQuerySystemInformation)g_original_func_addr)(
+        NTSTATUS status = ((_NtQuerySystemInformation)g_originalFuncAddr)(
             SystemInformationClass,
             SystemInformation,
             SystemInformationLength,
