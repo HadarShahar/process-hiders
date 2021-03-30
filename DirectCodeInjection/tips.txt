@@ -1,0 +1,51 @@
+source:
+https://www.codeproject.com/articles/7392/lock-windows-desktop
+winlock_source\source\Dll\Inject.c, from line 573
+
+/**************************************************************************************************************
+ * Some tips when using CreateRemoteThread()/WriteProcessMemory().                                            *
+ *                                                                                                            *
+ * 1. Analise generated code.                                                                                 *
+ *    Check injected functions for absolute addressing (calls, jumps, data references, ...)                   * 
+ *    and other generated code that shouldn't be there.                                                       *
+ *    Use:                                                                                                    *
+ *    A) Project\Settings\C/C++\Listing Files\Listing file type=Assembly, Machine Code, and Source.           *
+ *    B) A disassembler (wdasm32).                                                                            *
+ *    C) A debugger (softice).                                                                                *
+ *                                                                                                            *
+ * 2. Turn off stack probes.                                                                                  *
+ *    Check for __chkstk() references in the listing files.                                                   *
+ *    A) Use #pragma check_stack(off). [DOESN'T SEEMS TO WORK ?!?]                                            *
+ *    B) Use less than 4K of local variables.                                                                 *
+ *    C) Augment the stack size: /Gs size (Project\Settings\C/C++\ProjectOptions)                             *
+ *                                                                                                            *
+ * 3. Remove the /GZ switch in the debug build.                                                               *
+ *    Check for __chkesp() references in the listing files.                                                   *
+ *    A) Project\Settings\C/C++\Project Options                                                               *
+ *                                                                                                            *
+ * 4. Disable incremental compilation (/Gi).                                                                  *
+ *    A) Use #pragma comment(linker, "/INCREMENTAL:NO")                                                       *
+ *    B) Remove the /Gi switch (Project\Settings\C/C++\Customize\Enable incremental compilation=Off           *
+ *    C) Declare the functions as static.                                                                     *
+ *                                                                                                            *
+ * 5. Don't let optimization screw your code.                                                                 *
+ *    A) Turn off optimization (Project\Settings\C/C++\General\Optimizations=Disable(Debug)                   *
+ *    B) Use #pragma optimize("", off)                                                                        *
+ *    C) Don't write functions with the same prototype (e.g. AfterFuncX()). Let them return different values. *
+ *                                                                                                            *
+ * 6. Split switch() statements in 3 cases maximum, or use if/then/else.                                      *
+ *                                                                                                            *
+ * 7. Don't call any functions besides those in KERNEL32.LL and USER32.DLL (USER32.DLL isn't garanted to be   *
+ *    mapped into every process).                                                                             *
+ *    Use LoadLibrary()/GetProcAddress if you need functions from other libraries.                            *
+ *                                                                                                            *
+ * 8. Don't use any static strings.                                                                           *
+ *    Pass them in INJDATA.                                                                                   *
+ *                                                                                                            *
+ * 9. Don't call any function directly.                                                                       *
+ *    Copy each routine to the remote process individually and supply their addresses in INJDATA.             *
+ *                                                                                                            *
+ * 10. Good luck.                                                                                             *
+ *     If you analise the generated code (using a disassembler) you should catch any errors before executing  *
+ *     the code (and crashing the process !).                                                                 *
+ **************************************************************************************************************/  
